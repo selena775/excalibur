@@ -1,4 +1,4 @@
-package com.example.excalibur
+package navigation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn

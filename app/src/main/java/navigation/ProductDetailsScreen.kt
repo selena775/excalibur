@@ -1,4 +1,4 @@
-package com.example.excalibur
+package navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
