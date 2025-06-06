@@ -8,13 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import navigation.Screen
+import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import navigation.Screen.Product
 import com.example.excalibur.ui.theme.ExcaliburTheme
+import navigation.products.ProductsScreen
 
 
 @Composable
@@ -36,14 +39,18 @@ fun MyApp() {
                             )
                         },
                         label = { Text(it.name) },
-                        selected = it.javaClass == backStack.last().javaClass,
+                        selected = it.javaClass == backStack.last().javaClass,  // should be it == backStack.last() if it is bottom bar
                         onClick = { backStack.add(it) }
                     )
                 }
             },
         ) {
-
             NavDisplay(
+                entryDecorators = listOf(
+                    rememberSceneSetupNavEntryDecorator(),
+                    rememberSavedStateNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
                 entryProvider = entryProvider {
@@ -53,18 +60,7 @@ fun MyApp() {
                         })
                     }
                     entry<Screen.Products> { key ->
-                        val itemsList = listOf(
-                            "Apple",
-                            "Banana",
-                            "Cherry",
-                            "Mango",
-                            "Orange",
-                            "Pineapple",
-                            "Strawberry",
-                            "Watermelon"
-                        )
-
-                        ProductsScreen(itemsList, onItemClicked = { productName ->
+                        ProductsScreen(onItemClicked = { productName ->
                             backStack.add(Product(productName))
                         })
                     }
