@@ -1,0 +1,90 @@
+package navigation.inner
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.NavKey
+import navigation.Screen
+
+@Composable
+fun NestedProductDetailFlow(
+    productId: String,
+    onNavigateOutside: (Screen) -> Unit // Optional: if nested flow can influence outer navigation
+) {
+    // This state holder manages the internal tabs of the product detail InnerScreen
+    // Create a back stack, specifying the key the app should start with
+    val backStack =
+        rememberSaveable { mutableStateListOf<NavKey>(InnerScreen.ProductDetailTabOverview(productId)) }
+
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text("Product Details for: $productId", style = MaterialTheme.typography.headlineMedium)
+
+        TabRow(
+            selectedTabIndex = when (backStack.last()) {
+                is InnerScreen.ProductDetailTabOverview -> 0
+                is InnerScreen.ProductDetailTabReviews -> 1
+                is InnerScreen.ProductDetailTabSpecs -> 2
+                else -> 0 // Fallback
+            }
+        ) {
+            Tab(
+                selected = backStack.last() is InnerScreen.ProductDetailTabOverview,
+                onClick = { backStack.add(InnerScreen.ProductDetailTabOverview(productId)) },
+                text = { Text("Overview") }
+            )
+            Tab(
+                selected = backStack.last() is InnerScreen.ProductDetailTabReviews,
+                onClick = { backStack.add(InnerScreen.ProductDetailTabReviews(productId)) },
+                text = { Text("Reviews") }
+            )
+            Tab(
+                selected = backStack.last() is InnerScreen.ProductDetailTabSpecs,
+                onClick = { backStack.add(InnerScreen.ProductDetailTabSpecs(productId)) },
+                text = { Text("Specs") }
+            )
+        }
+
+        // Display content based on the *nested* back stack's current key
+        when (backStack.last()) {
+            is InnerScreen.ProductDetailTabOverview -> ProductOverviewInnerScreen(productId)
+            is InnerScreen.ProductDetailTabReviews -> ProductReviewsInnerScreen(productId)
+            is InnerScreen.ProductDetailTabSpecs -> ProductSpecsInnerScreen(productId)
+            else -> Text("Error: Unknown Product Detail Tab")
+        }
+
+        // Example of how a nested flow might navigate "up" or "out" if needed
+        Button(onClick = { onNavigateOutside(Screen.Orders) }) {
+            Text("Go to Orders (from Nested)")
+        }
+
+        // Example of how a nested flow might navigate "up" or "out" if needed
+        Button(onClick = { backStack.removeLastOrNull() }) {
+            Text("Back in this nested child")
+        }
+    }
+}
+
+// Dummy InnerScreens for product detail tabs
+@Composable
+fun ProductOverviewInnerScreen(productId: String) {
+    Text("Overview of $productId")
+}
+
+@Composable
+fun ProductReviewsInnerScreen(productId: String) {
+    Text("Reviews for $productId")
+}
+
+@Composable
+fun ProductSpecsInnerScreen(productId: String) {
+    Text("Specs for $productId")
+}

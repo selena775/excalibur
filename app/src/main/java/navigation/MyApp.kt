@@ -24,6 +24,7 @@ import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.example.excalibur.OrderDetailsScreen
 import navigation.Screen.Product
 import com.example.excalibur.ui.theme.ExcaliburTheme
+import navigation.inner.NestedProductDetailFlow
 import navigation.orders.OrdersScreen
 import navigation.products.ProductsScreen
 
@@ -86,7 +87,10 @@ fun MyApp() {
                         })
                     }
                     entry<Product> { key ->
-                        ProductDetailsScreen(key.productName)
+                        NestedProductDetailFlow(key.productName,
+                            onNavigateOutside = {
+                                backStack.add(it)
+                            })
                     }
                     entry<Screen.Orders> { key ->
                         OrdersScreen(onItemClicked = { orderName ->
