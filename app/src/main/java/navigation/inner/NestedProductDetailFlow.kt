@@ -8,7 +8,10 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
@@ -23,34 +26,38 @@ fun NestedProductDetailFlow(
     // Create a back stack, specifying the key the app should start with
     val backStack =
         rememberSaveable { mutableStateListOf<NavKey>(InnerScreen.ProductDetailTabOverview(productId)) }
-
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text("Product Details for: $productId", style = MaterialTheme.typography.headlineMedium)
-
-        TabRow(
-            selectedTabIndex = when (backStack.last()) {
+    val selectedTabIndex by remember {
+        derivedStateOf {
+            when (backStack.last()) {
                 is InnerScreen.ProductDetailTabOverview -> 0
                 is InnerScreen.ProductDetailTabReviews -> 1
                 is InnerScreen.ProductDetailTabSpecs -> 2
-                else -> 0 // Fallback
+                else -> 0
             }
+        }
+    }
+    val tabs = remember(productId) { // Remember the tabs, re-create if productId changes
+        listOf(
+            TabItem("Overview", InnerScreen.ProductDetailTabOverview(productId)),
+            TabItem("Reviews", InnerScreen.ProductDetailTabReviews(productId)),
+            TabItem("Specs", InnerScreen.ProductDetailTabSpecs(productId))
+        )
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text("Product Details for: $productId", style = MaterialTheme.typography.headlineMedium)
+        TabRow(
+            selectedTabIndex = selectedTabIndex
         ) {
-            Tab(
-                selected = backStack.last() is InnerScreen.ProductDetailTabOverview,
-                onClick = { backStack.add(InnerScreen.ProductDetailTabOverview(productId)) },
-                text = { Text("Overview") }
-            )
-            Tab(
-                selected = backStack.last() is InnerScreen.ProductDetailTabReviews,
-                onClick = { backStack.add(InnerScreen.ProductDetailTabReviews(productId)) },
-                text = { Text("Reviews") }
-            )
-            Tab(
-                selected = backStack.last() is InnerScreen.ProductDetailTabSpecs,
-                onClick = { backStack.add(InnerScreen.ProductDetailTabSpecs(productId)) },
-                text = { Text("Specs") }
-            )
+
+
+            tabs.forEachIndexed { index, tabItem ->
+                Tab(
+                    selected = index == selectedTabIndex, // Use the single source of truth
+                    onClick = { backStack.add(tabItem.innerScreen) },
+                    text = { Text(tabItem.title) }
+                )
+            }
         }
 
         // Display content based on the *nested* back stack's current key
