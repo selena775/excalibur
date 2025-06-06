@@ -19,19 +19,21 @@ sealed class Screen : NavKey {
     @Serializable
     data class Product(val productName: String) : Screen()
 
+    @Serializable
+    data object Orders : Screen()
+
+    @Serializable
+    data class Order(val orderName: String) : Screen()
+
     // A simple property to get a displayable name
     val name: String
         get() = when (this) {
             Home -> "Home"
             Products -> "Products"
+            Orders -> "Orders"
             is Product -> "Product $productName"
-        }
-
-    // A simple property to get a displayable name
-    val icon: ImageVector
-        get() = when (this) {
-            Home -> Icons.Default.Home
-            Products -> Icons.Default.ShoppingCart
-            is Product -> Icons.Default.Favorite
+            is Order -> "Order $orderName"
         }
 }
+
+data class ScreenTab(val screen: Screen, val icon: ImageVector)

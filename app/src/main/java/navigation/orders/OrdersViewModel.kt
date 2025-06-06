@@ -1,4 +1,4 @@
-package navigation.products
+package navigation.orders
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,20 +9,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 
-class ProductsViewModel :
+class OrdersViewModel :
     ViewModel() {
 
     init {
-        Log.e("Selena", "INITIALISE ProductsViewModel")
+        Log.e("Selena", "INITIALISE OrdersViewModel")
     }
 
     override fun onCleared() {
-        Log.e("Selena", "ONCLEARED ProductsViewModel")
+        Log.e("Selena", "ONCLEARED OrdersViewModel")
         super.onCleared()
     }
 
-    val productsUiState: StateFlow<List<String>> =
-        getStreamProducts()
+    val ordersUiState: StateFlow<List<String>> =
+        getStreamOrders()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -30,18 +30,19 @@ class ProductsViewModel :
             )
 
 
-    fun getStreamProducts() = flow {
-        delay(3000)
+    fun getStreamOrders() = flow {
+        delay(2000)
         emit(
             listOf(
-                "Apple",
-                "Banana",
-                "Cherry",
-                "Mango",
-                "Orange",
-                "Pineapple",
-                "Strawberry",
-                "Watermelon"
+                "456677",
+                "1234555",
+                "1234555",
+                "53562",
+                "3453636",
+                "2525266",
+                "333333",
+                "577777",
+
             )
         )
     }
