@@ -1,5 +1,6 @@
 package navigation.inner
 
+import HomeScreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -15,6 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import navigation.Screen
 
 @Composable
@@ -60,13 +64,21 @@ fun NestedProductDetailFlow(
             }
         }
 
-        // Display content based on the *nested* back stack's current key
-        when (backStack.last()) {
-            is InnerScreen.ProductDetailTabOverview -> ProductOverviewInnerScreen(productId)
-            is InnerScreen.ProductDetailTabReviews -> ProductReviewsInnerScreen(productId)
-            is InnerScreen.ProductDetailTabSpecs -> ProductSpecsInnerScreen(productId)
-            else -> Text("Error: Unknown Product Detail Tab")
-        }
+        NavDisplay(
+            backStack = backStack,
+            onBack = { backStack.removeLastOrNull() },
+            entryProvider = entryProvider {
+                entry<InnerScreen.ProductDetailTabOverview> { key ->
+                    ProductOverviewInnerScreen(productId)
+                }
+                entry<InnerScreen.ProductDetailTabReviews> { key ->
+                    ProductReviewsInnerScreen(productId)
+                }
+                entry<InnerScreen.ProductDetailTabSpecs> { key ->
+                    ProductSpecsInnerScreen(productId)
+                }
+            }
+        )
 
         // Example of how a nested flow might navigate "up" or "out" if needed
         Button(onClick = { onNavigateOutside(Screen.Orders) }) {
