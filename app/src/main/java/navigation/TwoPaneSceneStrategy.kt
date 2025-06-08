@@ -36,11 +36,7 @@ class TwoPaneScene<T : Any>(
 
     companion object {
         internal const val TWO_PANE_KEY = "TwoPane"
-        /**
-         * Helper function to add metadata to a [NavEntry] indicating it can be displayed
-         * in a two-pane layout.
-         */
-        fun twoPane() = mapOf(TWO_PANE_KEY to true)
+        internal const val GROUP_TYPE = "GroupType"
     }
 }
 
@@ -70,7 +66,8 @@ class TwoPaneSceneStrategy<T : Any> : SceneStrategy<T> {
         // Condition 2: Only return a Scene if there are two entries, and both have declared
         // they can be displayed in a two pane scene.
         return if (lastTwoEntries.size == 2 &&
-            lastTwoEntries.all { it.metadata.containsKey(TwoPaneScene.TWO_PANE_KEY) }
+            lastTwoEntries.all { it.metadata.containsKey(TwoPaneScene.TWO_PANE_KEY) &&  it.metadata[TwoPaneScene.TWO_PANE_KEY] == true}
+            && (lastTwoEntries[0].metadata[TwoPaneScene.GROUP_TYPE] == lastTwoEntries[1].metadata[TwoPaneScene.GROUP_TYPE])
         ) {
             val firstEntry = lastTwoEntries.first()
             val secondEntry = lastTwoEntries.last()

@@ -6,7 +6,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -22,6 +25,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import com.example.excalibur.OrderDetailsScreen
 import navigation.Screen.Product
 import com.example.excalibur.ui.theme.ExcaliburTheme
@@ -52,6 +56,15 @@ fun MyApp() {
 
     // Your app's theme
     ExcaliburTheme {
+        val adaptiveInfo = currentWindowAdaptiveInfo()
+        val customNavSuiteType = with(adaptiveInfo) {
+            if (windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND)) {
+                NavigationSuiteType.NavigationDrawer
+            } else {
+                NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+            }
+        }
+
         NavigationSuiteScaffold(
             navigationSuiteItems = {
                 screensToShow.forEach { screenTab ->
@@ -68,6 +81,7 @@ fun MyApp() {
                     )
                 }
             },
+            layoutType = customNavSuiteType
         ) {
             NavDisplay(
                 entryDecorators = listOf(
@@ -84,26 +98,38 @@ fun MyApp() {
                     }
                     entry<Screen.Products>(
                         // Mark this entry as eligible for two-pane display
-                        metadata = TwoPaneScene.twoPane()
+                        metadata = mapOf(
+                            TwoPaneScene.TWO_PANE_KEY to true,
+                            TwoPaneScene.GROUP_TYPE to "Product Type"
+                        )
                     ) { key ->
                         ProductsScreen(onItemClicked = { productName ->
                             backStack.navigateTo(Product(productName))
                         })
                     }
                     entry<Product>(// Mark this entry as eligible for two-pane display
-                        metadata = TwoPaneScene.twoPane()
+                        metadata = mapOf(
+                            TwoPaneScene.TWO_PANE_KEY to true,
+                            TwoPaneScene.GROUP_TYPE to "Product Type"
+                        )
                     ) { key ->
                         ProductDetailsScreen(key.productName)
                     }
                     entry<Screen.Orders>(// Mark this entry as eligible for two-pane display
-                        metadata = TwoPaneScene.twoPane()
+                        metadata = mapOf(
+                            TwoPaneScene.TWO_PANE_KEY to true,
+                            TwoPaneScene.GROUP_TYPE to "Order Type"
+                        )
                     ) { key ->
                         OrdersScreen(onItemClicked = { orderName ->
                             backStack.navigateTo(Screen.Order(orderName))
                         })
                     }
                     entry<Screen.Order>(// Mark this entry as eligible for two-pane display
-                        metadata = TwoPaneScene.twoPane()
+                        metadata = mapOf(
+                            TwoPaneScene.TWO_PANE_KEY to true,
+                            TwoPaneScene.GROUP_TYPE to "Order Type"
+                        )
                     ) { key ->
                         OrderDetailsScreen(key.orderName)
                     }
