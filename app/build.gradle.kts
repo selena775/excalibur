@@ -5,6 +5,7 @@ plugins {
 
     // Optional, provides the @Serialize annotation for autogeneration of Serializers.
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 
 }
 

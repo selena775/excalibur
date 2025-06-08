@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
@@ -62,7 +63,7 @@ fun MyApp() {
                         },
                         label = { Text(screenTab.screen.name) },
                         selected = screenTab.screen == selectedTab,
-                        onClick = { backStack.add(screenTab.screen) }
+                        onClick = { backStack.navigateTo(screenTab.screen) }
                     )
                 }
             },
@@ -78,23 +79,20 @@ fun MyApp() {
                 entryProvider = entryProvider {
                     entry<Screen.Home> { key ->
                         HomeScreen("Welcome to Nav3", onNextScreen = {
-                            backStack.add(Screen.Products)
+                            backStack.navigateTo(Screen.Products)
                         })
                     }
                     entry<Screen.Products> { key ->
                         ProductsScreen(onItemClicked = { productName ->
-                            backStack.add(Product(productName))
+                            backStack.navigateTo(Product(productName))
                         })
                     }
                     entry<Product> { key ->
-                        NestedProductDetailFlow(key.productName,
-                            onNavigateOutside = {
-                                backStack.add(it)
-                            })
+                        ProductDetailsScreen (key.productName)
                     }
                     entry<Screen.Orders> { key ->
                         OrdersScreen(onItemClicked = { orderName ->
-                            backStack.add(Screen.Order(orderName))
+                            backStack.navigateTo(Screen.Order(orderName))
                         })
                     }
                     entry<Screen.Order> { key ->
@@ -106,6 +104,41 @@ fun MyApp() {
     }
 }
 
+private fun SnapshotStateList<NavKey>.navigateTo(key: NavKey) {
+    add(key)
+}
+
+//private fun SnapshotStateList<NavKey>.navigateTo(key: NavKey) {
+//
+//    if (lastOrNull() == key) {
+//        // Already at this destination, do nothing
+//        return
+//    }
+//
+//    // Check if the key already exists in the back stack
+//    val existingIndex = indexOfFirst { it::class == key::class }
+//
+//    if (existingIndex != -1) {
+//        // If it exists, remove everything *above* it to bring it to the top.
+//        // This is like popUpTo(destination, {inclusive: false}, {saveState: false}) + launchSingleTop
+//        // Note: This specific implementation might lose state of intermediate screens.
+//        // For more advanced popUpTo behavior, you might need a more complex state holder
+//        // or to use a full NavController.
+//        while (size > existingIndex + 1) {
+//            removeLast()
+//        }
+//        // If the *exact same instance* (with same arguments) is already at top, no need to add again.
+//        if (lastOrNull() != key) {
+//            // This handles cases where you navigate to a different instance of the same type
+//            // e.g., Products -> ProductDetail(1) -> ProductDetail(2)
+//            // If you want ProductDetail(1) to always be unique, this is trickier.
+//            add(key)
+//        }
+//    } else {
+//        // Destination not in back stack, add it normally
+//        add(key)
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable

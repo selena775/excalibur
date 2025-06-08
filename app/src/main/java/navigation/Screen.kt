@@ -1,29 +1,25 @@
 package navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-sealed class Screen : NavKey {
+sealed interface Screen : NavKey, Parcelable {
+    @Parcelize
+    data object Home : Screen
 
-    @Serializable
-    data object Home : Screen()
+    @Parcelize
+    data object Products : Screen
 
-    @Serializable
-    data object Products : Screen()
+    @Parcelize
+    data class Product(val productName: String) : Screen
 
-    @Serializable
-    data class Product(val productName: String) : Screen()
+    @Parcelize
+    data object Orders : Screen
 
-    @Serializable
-    data object Orders : Screen()
-
-    @Serializable
-    data class Order(val orderName: String) : Screen()
+    @Parcelize
+    data class Order(val orderName: String) : Screen
 
     // A simple property to get a displayable name
     val name: String

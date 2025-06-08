@@ -16,7 +16,7 @@ fun OrdersScreen(
     modifier: Modifier = Modifier,
     onItemClicked: (String) -> Unit
 ) {
-    val list by viewModel.ordersUiState.collectAsStateWithLifecycle()
+    val list by viewModel.ordersList.collectAsStateWithLifecycle()
     OrdersScreen(list, modifier, onItemClicked)
 }
 
