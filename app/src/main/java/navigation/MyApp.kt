@@ -104,6 +104,9 @@ fun MyApp() {
                         )
                     ) { key ->
                         ProductsScreen(onItemClicked = { productName ->
+                            if(backStack.last() is Product) {   // when user is in landscape mode and tap on different product
+                                backStack.removeLastOrNull()
+                            }
                             backStack.navigateTo(Product(productName))
                         })
                     }
@@ -124,6 +127,9 @@ fun MyApp() {
                         )
                     ) { key ->
                         OrdersScreen(onItemClicked = { orderName ->
+                            if(backStack.last() is Product) {   // when user is in landscape mode and tap on different order
+                                backStack.removeLastOrNull()
+                            }
                             backStack.navigateTo(Screen.Order(orderName))
                         })
                     }
