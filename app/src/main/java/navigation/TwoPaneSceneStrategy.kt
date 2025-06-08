@@ -25,10 +25,10 @@ class TwoPaneScene<T : Any>(
     override val entries: List<NavEntry<T>> = listOf(firstEntry, secondEntry)
     override val content: @Composable (() -> Unit) = {
         Row(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.weight(0.5f)) {
+            Column(modifier = Modifier.weight(0.3f)) {
                 firstEntry.content.invoke(firstEntry.key)
             }
-            Column(modifier = Modifier.weight(0.5f)) {
+            Column(modifier = Modifier.weight(0.7f)) {
                 secondEntry.content.invoke(secondEntry.key)
             }
         }

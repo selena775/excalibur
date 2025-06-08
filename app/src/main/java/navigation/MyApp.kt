@@ -113,7 +113,9 @@ fun MyApp() {
                             TwoPaneScene.GROUP_TYPE to "Product Type"
                         )
                     ) { key ->
-                        ProductDetailsScreen(key.productName)
+                        NestedProductDetailFlow (key.productName){
+                            backStack.navigateTo(Screen.Orders)
+                        }
                     }
                     entry<Screen.Orders>(// Mark this entry as eligible for two-pane display
                         metadata = mapOf(
