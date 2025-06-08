@@ -38,7 +38,8 @@ fun MyApp() {
     val screensToShow = listOf(
         ScreenTab(Screen.Home, Icons.Default.Home),
         ScreenTab(Screen.Products, Icons.Default.ShoppingCart),
-        ScreenTab(Screen.Orders, Icons.Default.ShoppingCart))
+        ScreenTab(Screen.Orders, Icons.Default.ShoppingCart)
+    )
 
     val selectedTab by remember {
         derivedStateOf {
@@ -53,7 +54,7 @@ fun MyApp() {
     ExcaliburTheme {
         NavigationSuiteScaffold(
             navigationSuiteItems = {
-                screensToShow.forEach {screenTab ->
+                screensToShow.forEach { screenTab ->
                     item(
                         icon = {
                             Icon(
@@ -75,28 +76,44 @@ fun MyApp() {
                     rememberViewModelStoreNavEntryDecorator()
                 ),
                 backStack = backStack,
-                onBack = { backStack.removeLastOrNull() },
                 entryProvider = entryProvider {
                     entry<Screen.Home> { key ->
                         HomeScreen("Welcome to Nav3", onNextScreen = {
                             backStack.navigateTo(Screen.Products)
                         })
                     }
-                    entry<Screen.Products> { key ->
+                    entry<Screen.Products>(
+                        // Mark this entry as eligible for two-pane display
+                        metadata = TwoPaneScene.twoPane()
+                    ) { key ->
                         ProductsScreen(onItemClicked = { productName ->
                             backStack.navigateTo(Product(productName))
                         })
                     }
-                    entry<Product> { key ->
-                        ProductDetailsScreen (key.productName)
+                    entry<Product>(// Mark this entry as eligible for two-pane display
+                        metadata = TwoPaneScene.twoPane()
+                    ) { key ->
+                        ProductDetailsScreen(key.productName)
                     }
-                    entry<Screen.Orders> { key ->
+                    entry<Screen.Orders>(// Mark this entry as eligible for two-pane display
+                        metadata = TwoPaneScene.twoPane()
+                    ) { key ->
                         OrdersScreen(onItemClicked = { orderName ->
                             backStack.navigateTo(Screen.Order(orderName))
                         })
                     }
-                    entry<Screen.Order> { key ->
+                    entry<Screen.Order>(// Mark this entry as eligible for two-pane display
+                        metadata = TwoPaneScene.twoPane()
+                    ) { key ->
                         OrderDetailsScreen(key.orderName)
+                    }
+                },
+                sceneStrategy = TwoPaneSceneStrategy<Any>(),
+                onBack = { count ->
+                    repeat(count) {
+                        if (backStack.isNotEmpty()) {
+                            backStack.removeLastOrNull()
+                        }
                     }
                 }
             )

@@ -2,23 +2,22 @@ package navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-sealed interface Screen : NavKey, Parcelable {
-    @Parcelize
+sealed interface Screen : NavKey {
+    @Serializable
     data object Home : Screen
 
-    @Parcelize
+    @Serializable
     data object Products : Screen
 
-    @Parcelize
+    @Serializable
     data class Product(val productName: String) : Screen
 
-    @Parcelize
+    @Serializable
     data object Orders : Screen
 
-    @Parcelize
+    @Serializable
     data class Order(val orderName: String) : Screen
 
     // A simple property to get a displayable name
