@@ -59,7 +59,7 @@ fun MyApp() {
         val adaptiveInfo = currentWindowAdaptiveInfo()
         val customNavSuiteType = with(adaptiveInfo) {
             if (windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND)) {
-                NavigationSuiteType.NavigationDrawer
+                NavigationSuiteType.NavigationRail   // TODO maybe Drawer
             } else {
                 NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
             }
