@@ -2,6 +2,7 @@ package navigation
 
 import HomeScreen
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
@@ -29,6 +30,7 @@ import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_L
 import com.example.excalibur.OrderDetailsScreen
 import navigation.Screen.Product
 import com.example.excalibur.ui.theme.ExcaliburTheme
+import navigation.email.EmailListDetailApp
 import navigation.inner.NestedProductDetailFlow
 import navigation.orders.OrdersScreen
 import navigation.products.ProductsScreen
@@ -42,8 +44,8 @@ fun MyApp() {
     val screensToShow = listOf(
         ScreenTab(Screen.Home, Icons.Default.Home),
         ScreenTab(Screen.Products, Icons.Default.ShoppingCart),
-        ScreenTab(Screen.Orders, Icons.Default.ShoppingCart)
-    )
+        ScreenTab(Screen.Orders, Icons.Default.ShoppingCart),
+        ScreenTab(Screen.Emails, Icons.Default.Email))
 
     val selectedTab by remember {
         derivedStateOf {
@@ -140,6 +142,9 @@ fun MyApp() {
                         )
                     ) { key ->
                         OrderDetailsScreen(key.orderName)
+                    }
+                    entry<Screen.Emails> { key ->
+                        EmailListDetailApp()
                     }
                 },
                 sceneStrategy = TwoPaneSceneStrategy<Any>(),

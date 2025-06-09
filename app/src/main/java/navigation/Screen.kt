@@ -18,6 +18,9 @@ sealed interface Screen : NavKey {
     data object Orders : Screen
 
     @Serializable
+    data object Emails : Screen
+
+    @Serializable
     data class Order(val orderName: String) : Screen
 
     // A simple property to get a displayable name
@@ -28,6 +31,7 @@ sealed interface Screen : NavKey {
             Orders -> "Orders"
             is Product -> "Product $productName"
             is Order -> "Order $orderName"
+            is Emails -> "Emails"
         }
 }
 
