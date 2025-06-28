@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import navigation.products.CollapsingToolbarScreen
 
 @Composable
 fun HomeScreen(
@@ -34,20 +36,36 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp) // Adds space between children
     ) {
+        var collapsibleToolbarVisible by remember { mutableStateOf(false) }
+
         Text(text = greeting)
 
         Button(onClick = onNextScreen) {
             Text("On Next Screen")
         }
-        DraggableBottomPopupScreen()
+        DraggableBottomPopupScreen(
+            modifier = Modifier
+                .heightIn(min = 64.dp)
+                .weight(1f)
+        )
+        Button(onClick = { collapsibleToolbarVisible = !collapsibleToolbarVisible }) {
+            if (collapsibleToolbarVisible) {
+                Text(" Hide CollapsingToolbarScreen")
+            } else {
+                Text(" Show CollapsingToolbarScreen")
+            }
+        }
+
+        if (collapsibleToolbarVisible) {
+            CollapsingToolbarScreen(modifier = Modifier.weight(1f)) // Takes 1 part of remaining space)
+        }
     }
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DraggableBottomPopupScreen() {
+fun DraggableBottomPopupScreen(modifier: Modifier) {
     // State to control whether the bottom sheet is shown
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -60,7 +78,7 @@ fun DraggableBottomPopupScreen() {
     val scope = rememberCoroutineScope()
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Button(onClick = { showBottomSheet = true }) {
@@ -119,5 +137,5 @@ fun DraggableBottomPopupScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewDraggableBottomPopupScreen() {
-    DraggableBottomPopupScreen()
+    DraggableBottomPopupScreen(modifier = Modifier.fillMaxWidth())
 }

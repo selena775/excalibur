@@ -38,7 +38,7 @@ class OrdersViewModel : ViewModel() {
     // This method now simply returns the Flow, it doesn't collect or transform it.
     fun getStreamOrders() = flow {
         Log.d("OrdersViewModel", "Starting getStreamOrders flow (manual collect)...")
-        delay(2000) // Simulate network/DB call
+        delay(1000) // Simulate network/DB call
         val orders = listOf(
             "456677", "1234555", "1234555", "53562",
             "3453636", "2525266", "333333", "577777"

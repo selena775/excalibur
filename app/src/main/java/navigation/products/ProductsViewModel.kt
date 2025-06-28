@@ -31,7 +31,7 @@ class ProductsViewModel :
 
 
     fun getStreamProducts() = flow {
-        delay(3000)
+        delay(1000)
         emit(
             listOf(
                 "Apple",
