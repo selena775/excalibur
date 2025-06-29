@@ -1,16 +1,17 @@
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,8 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import kotlinx.coroutines.launch
+import navigation.home.CollapsingToolbarButton
 import navigation.home.CollapsingToolbarScreen
+import navigation.home.CommonElementsInColumn
 
 @Composable
 fun HomeScreen(
@@ -31,33 +35,51 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNextScreen: () -> Unit
 ) {
-    Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp) // Adds space between children
-    ) {
-        var collapsibleToolbarVisible by remember { mutableStateOf(false) }
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
-        Text(text = greeting)
-
-        Button(onClick = onNextScreen) {
-            Text("On Next Screen")
-        }
-        DraggableBottomPopupScreen(
-            modifier = Modifier
-                .heightIn(min = 64.dp)
-                .weight(0.3f)
+    var isWide by remember {
+        mutableStateOf(
+            with(windowSizeClass) {
+                windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND)
+            }
         )
-        Button(onClick = { collapsibleToolbarVisible = !collapsibleToolbarVisible }) {
+    }
+
+    var collapsibleToolbarVisible by remember { mutableStateOf(false) }
+
+    if (isWide) {
+        Row {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp) // Adds space between children
+            ) {
+                CommonElementsInColumn(greeting, modifier, onNextScreen)
+                CollapsingToolbarButton(collapsibleToolbarVisible) {
+                    collapsibleToolbarVisible = !collapsibleToolbarVisible
+                }
+            }
+
             if (collapsibleToolbarVisible) {
-                Text(" Hide CollapsingToolbarScreen")
-            } else {
-                Text(" Show CollapsingToolbarScreen")
+                CollapsingToolbarScreen(modifier = Modifier.weight(2f)) // Takes 1 part of remaining space)
             }
         }
+    } else {
+        Column(
+            modifier = modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp) // Adds space between children
+        ) {
 
-        if (collapsibleToolbarVisible) {
-            CollapsingToolbarScreen(modifier = Modifier.weight(0.7f)) // Takes 1 part of remaining space)
+            CommonElementsInColumn(greeting, modifier, onNextScreen)
+            CollapsingToolbarButton(collapsibleToolbarVisible) {
+                collapsibleToolbarVisible = !collapsibleToolbarVisible
+            }
+
+            if (collapsibleToolbarVisible) {
+                CollapsingToolbarScreen(modifier = Modifier.weight(0.7f)) // Takes 1 part of remaining space)
+            }
+
         }
     }
 }
