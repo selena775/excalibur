@@ -2,7 +2,6 @@ package navigation.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +31,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import navigation.home.section.SectionedLazyColumn
+import navigation.home.section.myDataSections
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,24 +102,15 @@ fun CollapsingToolbarScreen(modifier: Modifier) {
                 .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
         )
 
-        LazyColumn(
+        SectionedLazyColumn(
+            sections = myDataSections,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
                 top = toolbarHeight,
                 bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             ),
             state = lazyListState
-        ) {
-            item{ Spacer(Modifier.height(4.dp)) }
-            items(50) { index ->
-                Text(
-                    text = "Item $index",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
-        }
+        )
     }
 }
 
