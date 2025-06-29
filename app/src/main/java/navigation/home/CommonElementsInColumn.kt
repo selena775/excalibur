@@ -6,7 +6,9 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -44,32 +46,16 @@ fun ColumnScope.CommonElementsInColumn(
             .heightIn(min = 64.dp)
             .weight(0.3f)
     )
-
-    Text(text = "Drag the red box horizontally!")
-
-    // State to hold the current horizontal offset of the box
-    var offsetX by remember { mutableFloatStateOf(0f) }
-
-    Box(
-        modifier = Modifier
-            .offset { IntOffset(offsetX.roundToInt(), 0) } // Apply the offset
-            .background(Color.Red)
-            .size(100.dp)
-            .draggable(
-                orientation = Orientation.Horizontal, // Allow horizontal dragging
-                state = rememberDraggableState { delta ->
-                    // Update the offset when the user drags
-                    offsetX += delta
-                }
-            )
-    ) {
-        Text(
-            text = "Drag Me!",
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
+    Row {
+        Column(Modifier.weight(1f)) {
+            Text(text = "Drag the red box horizontally!")
+            HorizonatlyDraggableBox()
+        }
+        Column(Modifier.weight(1f)) {
+            Text(text = "Drag the blue box in any direction!")
+            DraggableBoxAnyDirectionExample()
+        }
     }
-
 }
 
 
