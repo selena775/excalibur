@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import navigation.products.CollapsingToolbarScreen
+import navigation.home.CollapsingToolbarScreen
 
 @Composable
 fun HomeScreen(
@@ -46,7 +46,7 @@ fun HomeScreen(
         DraggableBottomPopupScreen(
             modifier = Modifier
                 .heightIn(min = 64.dp)
-                .weight(1f)
+                .weight(0.3f)
         )
         Button(onClick = { collapsibleToolbarVisible = !collapsibleToolbarVisible }) {
             if (collapsibleToolbarVisible) {
@@ -57,7 +57,7 @@ fun HomeScreen(
         }
 
         if (collapsibleToolbarVisible) {
-            CollapsingToolbarScreen(modifier = Modifier.weight(1f)) // Takes 1 part of remaining space)
+            CollapsingToolbarScreen(modifier = Modifier.weight(0.7f)) // Takes 1 part of remaining space)
         }
     }
 }

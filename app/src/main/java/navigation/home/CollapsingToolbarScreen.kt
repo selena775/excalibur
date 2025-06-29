@@ -1,4 +1,4 @@
-package navigation.products
+package navigation.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

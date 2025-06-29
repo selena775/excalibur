@@ -12,8 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import navigation.MyApp
-import navigation.inner.NestedProductDetailFlow
-import navigation.products.CollapsingToolbarScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
